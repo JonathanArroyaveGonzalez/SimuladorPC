@@ -1,6 +1,8 @@
 // Memoria instrucciones
-let instructions = ["00|000|30|40|12", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
-let data = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
+let instructions = ["00|000|30|40|12", "-","-","-","-","-","-","-","-","-","-","-","-","-"];
+let data = ["-","-","-","-","-","-","-","-","-","-","-","-","-","-"];
+let records = ["-","-","-","-","-"];
+
 
 //Valor de los registros
 let IR = 0;   // Registro de instruccion
@@ -33,6 +35,11 @@ const record = document.querySelector(".records");
 const ControlBus = document.querySelector(".control-bus");
 const AddressBus = document.querySelector(".address-bus");
 const DataBus = document.querySelector(".data-bus");
+
+// Obtén referencias a los contenedores de memoria
+const memoryInstruction = document.querySelector('.memory-section-instruction');
+const memoryData = document.querySelector('.memory-section-data');
+const recordsValues= document.querySelector('.records-data');
 
 // Referencia a los valores de los registros
 //const ALU= document.querySelector(".alu");
@@ -283,3 +290,19 @@ async function changeControlBusColor() {
     ControlBus.style.backgroundColor = originalColorControlBus;
 }
 
+
+// Función para mostrar el contenido de un arreglo en un contenedor
+function mostrarContenido(contenedor, arreglo) {
+    contenedor.innerHTML = ''; // Limpia el contenido anterior
+
+    arreglo.forEach((elemento, indice) => {
+        const div = document.createElement('div');
+        div.textContent = `Posición ${indice}: ${elemento}`;
+        contenedor.appendChild(div);
+    });
+}
+
+// Muestra el contenido de los arreglos al cargar la página
+mostrarContenido(memoryInstruction, instructions);
+mostrarContenido(memoryData, data);
+mostrarContenido(recordsValues, records);
