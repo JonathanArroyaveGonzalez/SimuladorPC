@@ -1,0 +1,146 @@
+/* Estilos generales del contenedor */
+#pc-container {
+    display: flex;
+    justify-content: space-around;
+    font-family: monospace; /* Fuente de aspecto técnico */
+    background-color: #f0f0f0; /* Fondo gris claro */
+    padding: 20px;
+}
+
+/* Estilos del procesador */
+#processor-container{
+    border: 2px solid #333;
+    background-color: #fff;
+}
+#processor {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columnas */
+    grid-template-rows: repeat(5, auto); /* 5 filas con altura automática */
+    gap: 20px;
+    padding: 20px;
+    text-align: center;
+    align-items: center;  /* Centrar verticalmente */
+    justify-items: center; /* Centrar horizontalmente */
+}
+
+
+.uc {
+    grid-column: 1 / span 3; /* Abarca las 3 columnas */
+    grid-row: 1;
+    background-color: #67eb67; /* Verde claro */
+}
+
+.alu {
+    grid-column: 1 / span 3;; 
+    grid-row: 2;
+    background-color: #f2b05e; /* Naranja */
+}
+
+.pc {
+    grid-column: 1; 
+    grid-row: 3;
+    background-color: #b0f25e; /* Verde lima */
+}
+
+.mar {
+    grid-column: 2;
+    grid-row: 3;  
+    background-color: #f2f279; /* Amarillo pálido */
+}
+
+.ir {
+    grid-column: 3; 
+    grid-row: 3;   
+    background-color: #5eb0f2; /* Azul claro */
+}
+.mbr {
+    grid-column: 1 / span 3; 
+    grid-row: 4; 
+    background-color: #f279b0; /* Rosa */
+}
+.records {
+    grid-column: 1 / span 3; /* Abarca las 3 columnas */
+    grid-row: 5;
+    background-color: #79f2f2; /* Turquesa */
+}
+
+/* Estilos para los elementos dentro de los divs (puedes personalizarlos) */
+.uc, .alu, .ir, .mar, .mbr, .pc, .records {
+    border: 1px solid #ccc; 
+    padding: 10px;
+    font-weight: bold;
+}
+
+
+
+
+/* Estilos de los buses */
+#buses {
+    display: flex; /* Organiza los buses en fila */
+    justify-content: space-around; /* Distribuye los buses uniformemente */
+    align-items: center; /* Alinea los buses verticalmente al centro */
+    padding: 20px;
+}
+
+.control-bus, .data-bus, .address-bus {
+    width: 100px; /* Ancho suficiente para el texto vertical */
+    height: 450px;
+    margin: 0 10px; /* Margen horizontal entre los buses */
+    border-radius: 5px;
+    display: flex; /* Flexbox para alinear el texto */
+    flex-direction: column; /* Texto en columna */
+    justify-content: center; /* Centrar verticalmente */
+    align-items: center; /* Centrar horizontalmente */
+    padding-top: 25px;
+}
+
+.control-bus h2, .data-bus h2, .address-bus h2 {
+    writing-mode: vertical-rl; /* Texto vertical de derecha a izquierda */
+    //text-orientation: upright; /* Mantiene la orientación del texto */
+    transform: rotate(180deg); /* Gira el texto 180 grados para corregir la orientación */
+    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+}
+
+.control-bus { background-color: #007bff; } 
+.data-bus { background-color: #28a745; } 
+.address-bus { background-color: #dc3545; }
+
+/* Estilos de la memoria RAM */
+.memory {
+    border: 2px solid #333; 
+    background-color: #fff; 
+    padding: 20px;
+    text-align: center;
+}
+
+.memory-section-instruction, .memory-section-data {
+    background-color: #f5f5f5; 
+    border: 1px dashed #ccc; 
+    padding: 10px;
+    margin-top: 10px;
+    min-height: 100px; /* Altura mínima para simular memoria */
+    overflow: hidden; /* Ocultar el desbordamiento de texto si hay mucho contenido */
+}
+
+/* Estilos del panel de instrucciones */
+#instructions {
+    border: 2px solid #333;
+    background-color: #fff;
+    padding: 20px;
+}
+
+textarea {
+    width: 100%;
+    height: 100px;
+    resize: vertical; /* Permitir redimensionar solo verticalmente */
+    font-family: monospace;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+}

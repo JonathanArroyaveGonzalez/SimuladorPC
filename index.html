@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simulador de PC</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <div id="pc-container">
+        <div id="processor-container">
+            <h2 style="text-align: center;">Procesador</h2>
+        <div id="processor">
+            <div class="uc">UC</div>
+            <div class="alu">ALU
+                <label for="op1" class="op1-value">-</label>
+                <label for="op2" class="op2-value">-</label>
+                <label for="result" class="result-value">-</label>
+            </div>
+            <div class="ir">IR
+                <label for="ir"  class="ir-value">--</label>
+            </div>
+            <div class="mar">MAR
+                <label for="mar" class="mar-value">--</label>
+            </div>
+            <div class="mbr">MBR
+                <label for="mbr" class="mbr-value">--</label>
+            </div>
+            <div class="pc">PC
+                <label for="pc" class="pc-value">--</label>
+            </div>
+            <div class="records">
+                <h3>Banco de Registros</h3>
+            </div>
+        </div>
+    </div>
+
+        <div id="buses">
+            <div class="control-bus">
+                <h2>BUS DE CONTROL</h2>
+            </div>
+            <div class="data-bus">
+                <h2>BUS DE DATOS</h2>
+            </div>
+            <div class="address-bus">
+                <h2>BUS DE DIRECCIONES</h2>
+            </div>
+        </div>
+
+        <div class="memory">
+            <h2>Memoria RAM</h2>
+            <div class="memory-section-instruction">
+                <h3>Memoria de Instrucciones</h3>
+            </div>
+            <div class="memory-section-data">
+                <h3>Memoria de Datos</h3>
+            </div>
+        </div>
+
+        <div id="instructions">
+            <h2>Instrucciones</h2>
+            <textarea></textarea>
+            <button id="execute">Ejecutar</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script> 
+</body>
+</html>
