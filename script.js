@@ -1,12 +1,20 @@
 // Memoria instrucciones
-let instructions = ["001|010|30|40|12",1,2,3,4,5,6,7,8,9,10,11,12,13,14];
-let data = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14];
+let instructions = ["00|000|30|40|12", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
+let data = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
 
 //Valor de los registros
-let IR = 0;
-let MAR = 0;
-let MBR = 0;
-let PC = 0;
+let IR = 0;   // Registro de instruccion
+let MAR = 0;    // Registro de direccion de memoria
+let MBR = 0;    // Registro de datos de memoria
+let PC = 0;   // Contador de programa
+
+let op1 = 0;    // Operando 1
+let op2 = 0;    // Operando 2
+
+let dir;    // Direccion de memoria
+let res;   // Resultado de la operacion
+
+let CODOP;  // Codigo de operacion
 
 
 
@@ -15,26 +23,26 @@ const btnExecute = document.getElementById("execute");
 
 // Referencia a los componentes del sistema
 const memorySection = document.querySelector(".memory");
-const uc= document.querySelector(".uc");
-const ALU= document.querySelector(".alu");
-const ir= document.querySelector(".ir");
-const mar= document.querySelector(".mar");
-const mbr= document.querySelector(".mbr");
-const pc= document.querySelector(".pc");
-const record= document.querySelector(".records");
-const ControlBus= document.querySelector(".control-bus");
-const AddressBus= document.querySelector(".address-bus");
-const DataBus= document.querySelector(".data-bus");
+const uc = document.querySelector(".uc");
+const ALU = document.querySelector(".alu");
+const ir = document.querySelector(".ir");
+const mar = document.querySelector(".mar");
+const mbr = document.querySelector(".mbr");
+const pc = document.querySelector(".pc");
+const record = document.querySelector(".records");
+const ControlBus = document.querySelector(".control-bus");
+const AddressBus = document.querySelector(".address-bus");
+const DataBus = document.querySelector(".data-bus");
 
 // Referencia a los valores de los registros
 //const ALU= document.querySelector(".alu");
-const irValue= document.querySelector(".ir-value");
-const marValue= document.querySelector(".mar-value");
-const mbrValue= document.querySelector(".mbr-value");
-const pcValue= document.querySelector(".pc-value");
-const op1Value= document.querySelector(".op1-value");
-const op2Value= document.querySelector(".op2-value");
-const resultValue= document.querySelector(".result-value");
+const irValue = document.querySelector(".ir-value");
+const marValue = document.querySelector(".mar-value");
+const mbrValue = document.querySelector(".mbr-value");
+const pcValue = document.querySelector(".pc-value");
+const op1Value = document.querySelector(".op1-value");
+const op2Value = document.querySelector(".op2-value");
+const resultValue = document.querySelector(".result-value");
 
 //const recordVa= document.querySelector(".record");
 
@@ -53,16 +61,35 @@ const originalColorALU = getComputedStyle(ALU).backgroundColor;
 
 
 // Nuevo color temporal 
-const tempColor = "black";//"lightblue";
+const tempColor = "red";//"lightblue";
 
 
 // Agrega un event listener al botón
 btnExecute.addEventListener("click", () => {
-    
+
     pcValue.textContent = PC;
     fetch();
-    
+
 });
+
+// Funcion para direccionamiento inmediato
+async function inmediatly(op1, op2, CODOP) {
+    await changeUCColor();
+    await changeIRColor();
+    await changeALUColor();
+    executeALU(op1, op2, CODOP);
+}
+
+// Funcion para direccionamiento indirecto
+async function direct() {
+}
+
+// Funcion para direccionamiento indirecto
+async function indirect() {
+}
+
+
+
 
 // Funcion para el ciclo de captacion
 async function fetch() {
@@ -91,9 +118,93 @@ async function fetch() {
     await changeMBRColor();
     await changeIRColor();
     IR = MBR;
-    irValue.textContent = IR;  
+    irValue.textContent = IR;
+
+    // t4: Decodificacion de la instruccion
+    decodeInstruction(instructions[PC-1]);
 }
 
+// Funcion para el ciclo de ejecucion
+
+async function decodeInstruction(instruccion) {
+    let OPERATOR = instruccion.split("|")[1]
+    switch (OPERATOR) {
+        case "000": CODOP = '+';    // Suma
+            break;
+        case "001": CODOP = '-';    // Resta
+            break;
+        case "010": CODOP = '*';    // Multiplicacion
+            break;
+        case "011": CODOP = '/';    // Division
+            break;
+        case "100": CODOP = '==';    // Igualdad
+            break;
+        case "101": CODOP = '<';    // Menor que
+            break;
+        case "110": CODOP = '>';    // Mayor que
+            break;
+        case "111": CODOP = '!=';    // Diferencia
+            break;
+        
+        default: alert("Operador no valido");
+    }
+
+    op1 = parseInt(instruccion.split("|")[2]);
+    op2 = parseInt(instruccion.split("|")[3]);
+
+    dir = parseInt(instruccion.split("|")[4]);
+
+    let direccionamiento = instruccion.split("|")[0];  // Direccionamiento
+
+    switch (direccionamiento) {
+        case "00": inmediatly(op1, op2, CODOP);   // Direccionamiento inmediato
+            await changeUCColor();
+            await changeMBRColor();
+            MBR = res;
+            mbrValue.textContent = res;
+            await changeUCColor();
+            await changeControlBusColor();
+            await changeDataBusColor();
+            await changeMemoryColor();
+            data[dir] = res;
+            console.log("Valores de los datos :", data);
+            break;
+        case "01": direct();    // Direccionamiento directo
+            break;
+        case "10": indirect();    // Direccionamiento indirecto
+            break;
+        default: alert("Direccionamiento no valido");
+    }
+}
+
+
+// Funcion para la ejecucion de la ALU
+
+function executeALU(op1, op2, CODOP) {
+    switch (CODOP) {
+        case '+': res = op1 + op2;    // Suma
+            break;
+        case '-': res = op1 - op2;    // Resta
+            break;
+        case '*': res = op1 * op2;    // Multiplicacion
+            break;
+        case '/': res = op1 / op2;    // Division
+            break;
+        case '==': res = op1 == op2;    // Igualdad
+            break;
+        case '<': res = op1 < op2;    // Menor que
+            break;
+        case '>': res = op1 > op2;    // Mayor que
+            break;
+        case '!=': res = op1 != op2;    // Diferencia
+            break;
+        default: alert("Se tosteó la ALU");
+    }
+    resultValue.textContent = res;
+    op1Value.textContent = op1;
+    op2Value.textContent = op2;
+
+}
 
 // Función para cambiar el color del uc
 async function changeUCColor() {
