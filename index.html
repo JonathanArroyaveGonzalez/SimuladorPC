@@ -3,6 +3,7 @@
 <head>
     <title>Simulador de PC</title>
     <link rel="stylesheet" href="style.css">
+    <script type="module" src="./js/index.js"></script> 
 </head>
 <body>
     
@@ -57,11 +58,28 @@
 
         <div id="instructions">
             <h2>Instrucciones</h2>
-            <textarea></textarea>
+            <label for="op1">Operando 1</label>
+            <input name="op1" type="number">
+            <select name="signo" id="operador">
+                <option value="0">+</option>
+                <option value="1">-</option>
+                <option value="2">*</option>
+                <option value="3">/</option>
+                <option value="4">==</option>
+                <option value="5">!=</option>
+                <option value="6">></option>
+                <option value="7"><</option>
+            </select>
+            <label for="op2">Operando 2</label>
+            <input name="op2" type="number">
             <button id="execute">Ejecutar</button>
         </div>
     </div>
 
-    <script src="./js/index.js"></script> 
+    <audio id="audio" src="http://commondatastorage.googleapis.com/codeskulptor-assets/week7-bounce.m4a" type="audio/mpeg"></audio>
+
+    <button id="play">
+        reproducir
+    </button>
 </body>
 </html>
