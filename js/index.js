@@ -1,5 +1,5 @@
 import { viewContent } from './refreshContent.js';
-import {changeUCColor,changePCColor,changeIRColor,changeMBRColor,changeMARColor,changeALUColor,changeRecordColor,changeMemoryColor,changeDataBusColor,changeAddressBusColor,changeControlBusColor} from './colorChange.js';
+import { changeUCColor, changePCColor, changeIRColor, changeMBRColor, changeMARColor, changeALUColor, changeRecordColor, changeMemoryColor, changeDataBusColor, changeAddressBusColor, changeControlBusColor } from './colorChange.js';
 // Memoria instrucciones
 let instructions = [
   "-",
@@ -48,6 +48,8 @@ let dir; // Direccion de memoria
 let res; // Resultado de la operacion
 
 let CODOP; // Codigo de operacion
+
+let INSZ = "0|0|0|0";
 // Referencias al boton de ejecucion
 const btnExecute = document.getElementById("execute");
 
@@ -71,27 +73,27 @@ refreshData();
 
 //Event listener para el boton de load
 document.getElementById("load").addEventListener("click", () => {
-      const operador = document.getElementById('operador').value;
-      const direccion = document.getElementById('direccion').value;
-      const operando1 = document.getElementById('operador1').value;
-      const operando2 = document.getElementById('operador2').value;
-      const direction= document.getElementById('dirResult').value;
+  const operador = document.getElementById('operador').value;
+  const direccion = document.getElementById('direccion').value;
+  const operando1 = document.getElementById('operador1').value;
+  const operando2 = document.getElementById('operador2').value;
+  const direction = document.getElementById('dirResult').value;
 
-      let instruccion = instructions[0];
-      let partes = instruccion.split('|');
-      partes[0] = direccion;
-      partes[1] = operador;
-      partes[2] = operando1;
-      partes[3] = operando2;
-      partes[4] = direction;
-      
-      for (let i = 0; i < instructions.length; i++) {
-        if (instructions[i] == "-") {
-          instructions[i] = partes.join('|');
-          break;
-        }
-      }
-      refreshData();
+  let instruccion = instructions[0];
+  let partes = instruccion.split('|');
+  partes[0] = direccion;
+  partes[1] = operador;
+  partes[2] = operando1;
+  partes[3] = operando2;
+  partes[4] = direction;
+
+  for (let i = 0; i < instructions.length; i++) {
+    if (instructions[i] == "-") {
+      instructions[i] = partes.join('|');
+      break;
+    }
+  }
+  refreshData();
 });
 
 
@@ -192,7 +194,7 @@ async function decodeInstruction(instruccion) {
       break;
 
     case "10":
-      indirect(op1,op2,CODOP); // Direccionamiento indirecto
+      indirect(op1, op2, CODOP); // Direccionamiento indirecto
       break;
     default:
       alert("Direccionamiento no valido");
@@ -242,7 +244,7 @@ async function inmediatly(op1, op2, CODOP) {
   await changeALUColor();
   executeALU(op1, op2, CODOP);
   loadRecords(res);
-  console.log("Valores de los registros :", records); 
+  console.log("Valores de los registros :", records);
   refreshData();
   nextInstruction();
 }
@@ -276,49 +278,49 @@ async function direct(op1, op2, CODOP) {
 
 // Funcion para direccionamiento indirecto
 async function indirect(op1, op2, CODOP) {
-    await changeUCColor();
-    await changeControlBusColor();
-    await changeMARColor();
-    await changeAddressBusColor();
-    await changeMemoryColor();
-    await changeDataBusColor();
-    await changeMBRColor();
-    MBR = parseInt(data[op1]);
-    mbrValue.textContent = MBR;
-    await changeIRColor();
-    IR = MBR;
-    op1=IR;
-    irValue.textContent = IR;
-    await changeMemoryColor();
-    await changeDataBusColor();
-    MBR = parseInt(data[op2]);
-    op2=MBR;
-    mbrValue.textContent = MBR;
-    await changeMBRColor();
+  await changeUCColor();
+  await changeControlBusColor();
+  await changeMARColor();
+  await changeAddressBusColor();
+  await changeMemoryColor();
+  await changeDataBusColor();
+  await changeMBRColor();
+  MBR = parseInt(data[op1]);
+  mbrValue.textContent = MBR;
+  await changeIRColor();
+  IR = MBR;
+  op1 = IR;
+  irValue.textContent = IR;
+  await changeMemoryColor();
+  await changeDataBusColor();
+  MBR = parseInt(data[op2]);
+  op2 = MBR;
+  mbrValue.textContent = MBR;
+  await changeMBRColor();
 
-    //Capturando indireccion
-    await changeUCColor();
-    await changeControlBusColor();
-    await changeDataBusColor();
-    await changeMBRColor();
-    MBR = parseInt(data[op1]);
-    mbrValue.textContent = MBR;
-    await changeIRColor();
-    IR = MBR;
-    irValue.textContent = IR;
-    await changeControlBusColor();
-    await changeMemoryColor();
-    await changeDataBusColor();
-    MBR = parseInt(data[op2]);
-    mbrValue.textContent = MBR;
-    await changeMBRColor();
+  //Capturando indireccion
+  await changeUCColor();
+  await changeControlBusColor();
+  await changeDataBusColor();
+  await changeMBRColor();
+  MBR = parseInt(data[op1]);
+  mbrValue.textContent = MBR;
+  await changeIRColor();
+  IR = MBR;
+  irValue.textContent = IR;
+  await changeControlBusColor();
+  await changeMemoryColor();
+  await changeDataBusColor();
+  MBR = parseInt(data[op2]);
+  mbrValue.textContent = MBR;
+  await changeMBRColor();
 
-    executeALU(IR, MBR, CODOP);
-    await changeALUColor();
-    data[dir] = res;
-    // Muestra el contenido de los arreglos al cargar la página
-    refreshData();
-    nextInstruction();
+  executeALU(IR, MBR, CODOP);
+  await changeALUColor();
+  data[dir] = res;
+  // Muestra el contenido de los arreglos al cargar la página
+  refreshData();
+  nextInstruction();
 }
 
 
@@ -336,27 +338,29 @@ async function playSound() {
   audio.play(); // Reproducir inmediatamente la primera vez
 
   for (let i = 1; i < 3; i++) { // Comenzar el bucle desde 1
-      setTimeout(() => {
-          audio.play();
-      }, i * 2000); // Retraso de 2 segundos para las siguientes reproducciones
+    setTimeout(() => {
+      audio.play();
+    }, i * 2000); // Retraso de 2 segundos para las siguientes reproducciones
   }
 }
 
 
-function loadRecords(dato){
+function loadRecords(dato) {
 
   for (let i = 0; i < records.length; i++) {
-    if(dato[i] != "-"){
+    if (dato[i] != "-") {
       records[i] = dato;
       break;
     }
   }
 }
 
-function nextInstruction(){
-  if (instructions[PC] != "-" && PC < instructions.length) {
-    fetch();
+function nextInstruction() {
+  if (INSZ[0] != "1") {
+    if (instructions[PC] != "-" && PC < instructions.length) {
+      fetch();
+    }
+  } else {
+    alert("Fin de la ejecucion");
   }
 }
-
-
