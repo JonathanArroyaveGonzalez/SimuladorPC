@@ -2,7 +2,7 @@ import { viewContent } from './refreshContent.js';
 import {changeUCColor,changePCColor,changeIRColor,changeMBRColor,changeMARColor,changeALUColor,changeRecordColor,changeMemoryColor,changeDataBusColor,changeAddressBusColor,changeControlBusColor} from './colorChange.js';
 // Memoria instrucciones
 let instructions = [
-  "10|000|0|1|10",
+  "-",
   "-",
   "-",
   "-",
@@ -67,6 +67,34 @@ const op1Value = document.querySelector(".op1-value");
 const op2Value = document.querySelector(".op2-value");
 const resultValue = document.querySelector(".result-value");
 
+refreshData();
+
+//Event listener para el boton de load
+document.getElementById("load").addEventListener("click", () => {
+      const operador = document.getElementById('operador').value;
+      const direccion = document.getElementById('direccion').value;
+      const operando1 = document.getElementById('operador1').value;
+      const operando2 = document.getElementById('operador2').value;
+      const direction= document.getElementById('dirResult').value;
+
+      let instruccion = instructions[0];
+      let partes = instruccion.split('|');
+      partes[0] = direccion;
+      partes[1] = operador;
+      partes[2] = operando1;
+      partes[3] = operando2;
+      partes[4] = direction;
+      
+      for (let i = 0; i < instructions.length; i++) {
+        if (instructions[i] == "-") {
+          instructions[i] = partes.join('|');
+          break;
+        }
+      }
+      refreshData();
+});
+
+
 
 
 // Agrega un event listener al botón
@@ -74,6 +102,7 @@ btnExecute.addEventListener("click", () => {
   pcValue.textContent = PC;
   fetch();
 });
+
 
 // Funcion para el ciclo de captacion
 async function fetch() {
@@ -157,10 +186,6 @@ async function decodeInstruction(instruccion) {
       MBR = res;
       mbrValue.textContent = res;
       await changeUCColor();
-      await changeControlBusColor();
-      await changeDataBusColor();
-      await changeMemoryColor();
-      data[dir] = res;
       break;
     case "01":
       direct(op1, op2, CODOP); // Direccionamiento directo
@@ -216,6 +241,10 @@ async function inmediatly(op1, op2, CODOP) {
   await changeIRColor();
   await changeALUColor();
   executeALU(op1, op2, CODOP);
+  loadRecords(res);
+  console.log("Valores de los registros :", records); 
+  refreshData();
+  nextInstruction();
 }
 
 // Funcion para direccionamiento directo
@@ -242,7 +271,7 @@ async function direct(op1, op2, CODOP) {
   data[dir] = res;
   // Muestra el contenido de los arreglos al cargar la página
   refreshData();
-  console.log("Valores de los datos :", data, "en la posicion", data[dir]);
+  nextInstruction();
 }
 
 // Funcion para direccionamiento indirecto
@@ -289,7 +318,7 @@ async function indirect(op1, op2, CODOP) {
     data[dir] = res;
     // Muestra el contenido de los arreglos al cargar la página
     refreshData();
-    console.log("Valores de los datos :", data, "en la posicion", data[dir]);
+    nextInstruction();
 }
 
 
@@ -299,8 +328,6 @@ function refreshData() {
   viewContent(memoryData, data);
   viewContent(recordsValues, records);
 }
-
-refreshData(); // Muestra el contenido de los arreglos al cargar la página
 
 document.getElementById("play").addEventListener("click", playSound);
 
@@ -315,28 +342,21 @@ async function playSound() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const executeButton = document.getElementById('execute');
 
-  executeButton.addEventListener('click', () => {
-      const operador = document.getElementById('operador').value;
-      const direccion = document.getElementById('direccion').value;
-      const operando1 = document.getElementById('operador1').value;
-      const operando2 = document.getElementById('operador2').value;
+function loadRecords(dato){
 
-      let instruccion = instructions[0];
-      let partes = instruccion.split('|');
-      partes[0] = direccion;
-      partes[1] = operador;
-      partes[2] = operando1;
-      partes[3] = operando2;
+  for (let i = 0; i < records.length; i++) {
+    if(dato[i] != "-"){
+      records[i] = dato;
+      break;
+    }
+  }
+}
 
-      instructions[0] = partes.join('|');
-
-      viewContent(memoryInstruction, instructions);
-
-      // Aquí puedes agregar la lógica que necesites para ejecutar la instrucción
-  });
-});
+function nextInstruction(){
+  if (instructions[PC] != "-" && PC < instructions.length) {
+    fetch();
+  }
+}
 
 
