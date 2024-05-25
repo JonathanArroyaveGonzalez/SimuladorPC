@@ -315,3 +315,28 @@ async function playSound() {
   }
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+  const executeButton = document.getElementById('execute');
+
+  executeButton.addEventListener('click', () => {
+      const operador = document.getElementById('operador').value;
+      const direccion = document.getElementById('direccion').value;
+      const operando1 = document.getElementById('operador1').value;
+      const operando2 = document.getElementById('operador2').value;
+
+      let instruccion = instructions[0];
+      let partes = instruccion.split('|');
+      partes[0] = direccion;
+      partes[1] = operador;
+      partes[2] = operando1;
+      partes[3] = operando2;
+
+      instructions[0] = partes.join('|');
+
+      viewContent(memoryInstruction, instructions);
+
+      // Aquí puedes agregar la lógica que necesites para ejecutar la instrucción
+  });
+});
+
+
