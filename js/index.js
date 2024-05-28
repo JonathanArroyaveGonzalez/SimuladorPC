@@ -1,6 +1,6 @@
 // Memoria instrucciones
 let instructions = [
-  "10|000|0|1|10",
+  "01|010|2|3|6",
   "-",
   "-",
   "-",
@@ -188,6 +188,7 @@ async function decodeInstruction(instruccion) {
       await changeDataBusColor();
       await changeMemoryColor();
       data[dir] = res;
+      refreshContent();
       break;
     case "01":
       direct(op1, op2, CODOP); // Direccionamiento directo
@@ -235,6 +236,7 @@ function executeALU(op1, op2, CODOP) {
   resultValue.textContent = res;
   op1Value.textContent = op1;
   op2Value.textContent = op2;
+  refreshContent();
 }
 
 // Funcion para direccionamiento inmediato
@@ -243,6 +245,7 @@ async function inmediatly(op1, op2, CODOP) {
   await changeIRColor();
   await changeALUColor();
   executeALU(op1, op2, CODOP);
+  refreshContent();
 }
 
 // Funcion para direccionamiento directo
@@ -272,6 +275,7 @@ async function direct(op1, op2, CODOP) {
   mostrarContenido(memoryData, data);
   mostrarContenido(recordsValues, records);
   console.log("Valores de los datos :", data, "en la posicion", data[dir]);
+  refreshContent();
 }
 
 // Funcion para direccionamiento indirecto
@@ -321,6 +325,7 @@ async function indirect(op1, op2, CODOP) {
     mostrarContenido(memoryData, data);
     mostrarContenido(recordsValues, records);
     console.log("Valores de los datos :", data, "en la posicion", data[dir]);
+    refreshContent();
 }
 
 // Función para cambiar el color del uc
@@ -415,3 +420,10 @@ function mostrarContenido(contenedor, arreglo) {
 mostrarContenido(memoryInstruction, instructions);
 mostrarContenido(memoryData, data);
 mostrarContenido(recordsValues, records);
+
+function refreshContent(){
+  // Muestra el contenido de los arreglos al cargar la página
+mostrarContenido(memoryInstruction, instructions);
+mostrarContenido(memoryData, data);
+mostrarContenido(recordsValues, records);
+}
