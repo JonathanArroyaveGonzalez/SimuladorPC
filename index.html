@@ -3,6 +3,7 @@
 <head>
     <title>Simulador de PC</title>
     <link rel="stylesheet" href="style.css">
+    <script type="module" src="./js/index.js"></script> 
 </head>
 <body>
     
@@ -57,11 +58,38 @@
 
         <div id="instructions">
             <h2>Instrucciones</h2>
-            <textarea></textarea>
+            <label for="op1">Operando 1</label>
+            <input name="op1" id="operador1" type="number">
+            <select name="signo" id="operador">
+                <option value="000">+</option>
+                <option value="001">-</option>
+                <option value="010">*</option>
+                <option value="011">/</option>
+                <option value="100">==</option>
+                <option value="101">!=</option>
+                <option value="110">></option>
+                <option value="111"><</option>
+            </select>
+            <label for="op2">Operando 2</label>
+            <input name="op2" id="operador2" type="number">
+            <label for="direccion">Tipo de Direccionamiento</label>
+            <select name="direccionamiento" id="direccion">
+                <option value="00">Inmediato</option>
+                <option value="01">Directo</option>
+                <option value="10">Indirecto</option>
+            </select>
+
+            <label for="dirResult">Dirección del Resultado</label>
+            <input name="dirResult" id="dirResult" type="number">
+            <button id="load">Cargar</button>
             <button id="execute">Ejecutar</button>
         </div>
     </div>
 
-    <script src="./js/index.js"></script> 
+    <audio id="audio" src="http://commondatastorage.googleapis.com/codeskulptor-assets/week7-bounce.m4a" type="audio/mpeg"></audio>
+
+    <button id="play">
+        reproducir
+    </button>
 </body>
 </html>

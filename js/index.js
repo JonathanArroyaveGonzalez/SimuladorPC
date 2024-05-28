@@ -1,6 +1,8 @@
+import { viewContent } from './refreshContent.js';
+import { changeUCColor, changePCColor, changeIRColor, changeMBRColor, changeMARColor, changeALUColor, changeRecordColor, changeMemoryColor, changeDataBusColor, changeAddressBusColor, changeControlBusColor } from './colorChange.js';
 // Memoria instrucciones
 let instructions = [
-  "01|010|2|3|6",
+  "-",
   "-",
   "-",
   "-",
@@ -47,21 +49,10 @@ let res; // Resultado de la operacion
 
 let CODOP; // Codigo de operacion
 
+let INSZ = "0|0|0|0";
 // Referencias al boton de ejecucion
 const btnExecute = document.getElementById("execute");
 
-// Referencia a los componentes del sistema
-const memorySection = document.querySelector(".memory");
-const uc = document.querySelector(".uc");
-const ALU = document.querySelector(".alu");
-const ir = document.querySelector(".ir");
-const mar = document.querySelector(".mar");
-const mbr = document.querySelector(".mbr");
-const pc = document.querySelector(".pc");
-const record = document.querySelector(".records");
-const ControlBus = document.querySelector(".control-bus");
-const AddressBus = document.querySelector(".address-bus");
-const DataBus = document.querySelector(".data-bus");
 
 // Obtén referencias a los contenedores de memoria
 const memoryInstruction = document.querySelector(".memory-section-instruction");
@@ -78,29 +69,42 @@ const op1Value = document.querySelector(".op1-value");
 const op2Value = document.querySelector(".op2-value");
 const resultValue = document.querySelector(".result-value");
 
-//const recordVa= document.querySelector(".record");
+refreshData();
 
-// Colores originales de los componentes
-const originalColorMemory = getComputedStyle(memorySection).backgroundColor;
-const originalColorUC = getComputedStyle(uc).backgroundColor;
-const originalColorIR = getComputedStyle(ir).backgroundColor;
-const originalColorMAR = getComputedStyle(mar).backgroundColor;
-const originalColorMBR = getComputedStyle(mbr).backgroundColor;
-const originalColorPC = getComputedStyle(pc).backgroundColor;
-const originalColorRecord = getComputedStyle(record).backgroundColor;
-const originalColorControlBus = getComputedStyle(ControlBus).backgroundColor;
-const originalColorAddressBus = getComputedStyle(AddressBus).backgroundColor;
-const originalColorDataBus = getComputedStyle(DataBus).backgroundColor;
-const originalColorALU = getComputedStyle(ALU).backgroundColor;
+//Event listener para el boton de load
+document.getElementById("load").addEventListener("click", () => {
+  const operador = document.getElementById('operador').value;
+  const direccion = document.getElementById('direccion').value;
+  const operando1 = document.getElementById('operador1').value;
+  const operando2 = document.getElementById('operador2').value;
+  const direction = document.getElementById('dirResult').value;
 
-// Nuevo color temporal
-const tempColor = "red"; //"lightblue";
+  let instruccion = instructions[0];
+  let partes = instruccion.split('|');
+  partes[0] = direccion;
+  partes[1] = operador;
+  partes[2] = operando1;
+  partes[3] = operando2;
+  partes[4] = direction;
+
+  for (let i = 0; i < instructions.length; i++) {
+    if (instructions[i] == "-") {
+      instructions[i] = partes.join('|');
+      break;
+    }
+  }
+  refreshData();
+});
+
+
+
 
 // Agrega un event listener al botón
 btnExecute.addEventListener("click", () => {
   pcValue.textContent = PC;
   fetch();
 });
+
 
 // Funcion para el ciclo de captacion
 async function fetch() {
@@ -184,18 +188,13 @@ async function decodeInstruction(instruccion) {
       MBR = res;
       mbrValue.textContent = res;
       await changeUCColor();
-      await changeControlBusColor();
-      await changeDataBusColor();
-      await changeMemoryColor();
-      data[dir] = res;
-      refreshContent();
       break;
     case "01":
       direct(op1, op2, CODOP); // Direccionamiento directo
       break;
 
     case "10":
-      indirect(op1,op2,CODOP); // Direccionamiento indirecto
+      indirect(op1, op2, CODOP); // Direccionamiento indirecto
       break;
     default:
       alert("Direccionamiento no valido");
@@ -245,7 +244,10 @@ async function inmediatly(op1, op2, CODOP) {
   await changeIRColor();
   await changeALUColor();
   executeALU(op1, op2, CODOP);
-  refreshContent();
+  loadRecords(res);
+  console.log("Valores de los registros :", records);
+  refreshData();
+  nextInstruction();
 }
 
 // Funcion para direccionamiento directo
@@ -271,159 +273,95 @@ async function direct(op1, op2, CODOP) {
   await changeALUColor();
   data[dir] = res;
   // Muestra el contenido de los arreglos al cargar la página
-  mostrarContenido(memoryInstruction, instructions);
-  mostrarContenido(memoryData, data);
-  mostrarContenido(recordsValues, records);
-  console.log("Valores de los datos :", data, "en la posicion", data[dir]);
-  refreshContent();
+  refreshData();
+  nextInstruction();
 }
 
 // Funcion para direccionamiento indirecto
 async function indirect(op1, op2, CODOP) {
-    await changeUCColor();
-    await changeControlBusColor();
-    await changeMARColor();
-    await changeAddressBusColor();
-    await changeMemoryColor();
-    await changeDataBusColor();
-    await changeMBRColor();
-    MBR = parseInt(data[op1]);
-    mbrValue.textContent = MBR;
-    await changeIRColor();
-    IR = MBR;
-    op1=IR;
-    irValue.textContent = IR;
-    await changeMemoryColor();
-    await changeDataBusColor();
-    MBR = parseInt(data[op2]);
-    op2=MBR;
-    mbrValue.textContent = MBR;
-    await changeMBRColor();
+  await changeUCColor();
+  await changeControlBusColor();
+  await changeMARColor();
+  await changeAddressBusColor();
+  await changeMemoryColor();
+  await changeDataBusColor();
+  await changeMBRColor();
+  MBR = parseInt(data[op1]);
+  mbrValue.textContent = MBR;
+  await changeIRColor();
+  IR = MBR;
+  op1 = IR;
+  irValue.textContent = IR;
+  await changeMemoryColor();
+  await changeDataBusColor();
+  MBR = parseInt(data[op2]);
+  op2 = MBR;
+  mbrValue.textContent = MBR;
+  await changeMBRColor();
 
-    //Capturando indireccion
-    await changeUCColor();
-    await changeControlBusColor();
-    await changeDataBusColor();
-    await changeMBRColor();
-    MBR = parseInt(data[op1]);
-    mbrValue.textContent = MBR;
-    await changeIRColor();
-    IR = MBR;
-    irValue.textContent = IR;
-    await changeControlBusColor();
-    await changeMemoryColor();
-    await changeDataBusColor();
-    MBR = parseInt(data[op2]);
-    mbrValue.textContent = MBR;
-    await changeMBRColor();
+  //Capturando indireccion
+  await changeUCColor();
+  await changeControlBusColor();
+  await changeDataBusColor();
+  await changeMBRColor();
+  MBR = parseInt(data[op1]);
+  mbrValue.textContent = MBR;
+  await changeIRColor();
+  IR = MBR;
+  irValue.textContent = IR;
+  await changeControlBusColor();
+  await changeMemoryColor();
+  await changeDataBusColor();
+  MBR = parseInt(data[op2]);
+  mbrValue.textContent = MBR;
+  await changeMBRColor();
 
-    executeALU(IR, MBR, CODOP);
-    await changeALUColor();
-    data[dir] = res;
-    // Muestra el contenido de los arreglos al cargar la página
-    mostrarContenido(memoryInstruction, instructions);
-    mostrarContenido(memoryData, data);
-    mostrarContenido(recordsValues, records);
-    console.log("Valores de los datos :", data, "en la posicion", data[dir]);
-    refreshContent();
-}
-
-// Función para cambiar el color del uc
-async function changeUCColor() {
-  uc.style.backgroundColor = tempColor;
-  await new Promise((resolve) => setTimeout(resolve, 2000)); // Espera 2 segundos
-  uc.style.backgroundColor = originalColorUC;
-}
-
-// Función para cambiar el color del pc
-async function changePCColor() {
-  pc.style.backgroundColor = tempColor;
-  await new Promise((resolve) => setTimeout(resolve, 2000)); // Espera 2 segundos
-  pc.style.backgroundColor = originalColorPC;
-}
-
-// Función para cambiar el color del ir
-async function changeIRColor() {
-  ir.style.backgroundColor = tempColor;
-  await new Promise((resolve) => setTimeout(resolve, 2000)); // Espera 2 segundos
-  ir.style.backgroundColor = originalColorIR;
-}
-
-// Función para cambiar el color del mbr
-async function changeMBRColor() {
-  mbr.style.backgroundColor = tempColor;
-  await new Promise((resolve) => setTimeout(resolve, 2000)); // Espera 2 segundos
-  mbr.style.backgroundColor = originalColorMBR;
-}
-
-// Función para cambiar el color del mar
-async function changeMARColor() {
-  mar.style.backgroundColor = tempColor;
-  await new Promise((resolve) => setTimeout(resolve, 2000)); // Espera 2 segundos
-  mar.style.backgroundColor = originalColorMAR;
-}
-
-// Funcion para cambiar el color de la ALU
-async function changeALUColor() {
-  ALU.style.backgroundColor = tempColor;
-  await new Promise((resolve) => setTimeout(resolve, 2000)); // Espera 2 segundos
-  ALU.style.backgroundColor = originalColorALU;
-}
-
-// Funcion para cambiar el color de los registros
-async function changeRecordColor() {
-  record.style.backgroundColor = tempColor;
-  await new Promise((resolve) => setTimeout(resolve, 2000)); // Espera 2 segundos
-  record.style.backgroundColor = originalColorRecord;
-}
-
-// Función para cambiar el color de la memoria
-async function changeMemoryColor() {
-  memorySection.style.backgroundColor = tempColor;
-  await new Promise((resolve) => setTimeout(resolve, 2000)); // Espera 2 segundos
-  memorySection.style.backgroundColor = originalColorMemory;
-}
-
-// Función para cambiar el color del bus de datos
-async function changeDataBusColor() {
-  DataBus.style.backgroundColor = tempColor;
-  await new Promise((resolve) => setTimeout(resolve, 2000)); // Espera 2 segundos
-  DataBus.style.backgroundColor = originalColorDataBus;
-}
-
-// Función para cambiar el color del bus de direcciones addressBus
-async function changeAddressBusColor() {
-  AddressBus.style.backgroundColor = tempColor;
-  await new Promise((resolve) => setTimeout(resolve, 2000)); // Espera 2 segundos
-  AddressBus.style.backgroundColor = originalColorAddressBus;
-}
-
-// Función para cambiar el color del bus de control
-async function changeControlBusColor() {
-  ControlBus.style.backgroundColor = tempColor;
-  await new Promise((resolve) => setTimeout(resolve, 2000)); // Espera 2 segundos
-  ControlBus.style.backgroundColor = originalColorControlBus;
-}
-
-// Función para mostrar el contenido de un arreglo en un contenedor
-function mostrarContenido(contenedor, arreglo) {
-  contenedor.innerHTML = ""; // Limpia el contenido anterior
-
-  arreglo.forEach((elemento, indice) => {
-    const div = document.createElement("div");
-    div.textContent = `Posición ${indice}: ${elemento}`;
-    contenedor.appendChild(div);
-  });
-}
-
-// Muestra el contenido de los arreglos al cargar la página
-mostrarContenido(memoryInstruction, instructions);
-mostrarContenido(memoryData, data);
-mostrarContenido(recordsValues, records);
-
-function refreshContent(){
+  executeALU(IR, MBR, CODOP);
+  await changeALUColor();
+  data[dir] = res;
   // Muestra el contenido de los arreglos al cargar la página
-mostrarContenido(memoryInstruction, instructions);
-mostrarContenido(memoryData, data);
-mostrarContenido(recordsValues, records);
+  refreshData();
+  nextInstruction();
+}
+
+
+// Función para refrescar los datos de los arreglos
+function refreshData() {
+  viewContent(memoryInstruction, instructions);
+  viewContent(memoryData, data);
+  viewContent(recordsValues, records);
+}
+
+document.getElementById("play").addEventListener("click", playSound);
+
+async function playSound() {
+  let audio = document.getElementById("audio");
+  audio.play(); // Reproducir inmediatamente la primera vez
+
+  for (let i = 1; i < 3; i++) { // Comenzar el bucle desde 1
+    setTimeout(() => {
+      audio.play();
+    }, i * 2000); // Retraso de 2 segundos para las siguientes reproducciones
+  }
+}
+
+
+function loadRecords(dato) {
+
+  for (let i = 0; i < records.length; i++) {
+    if (dato[i] != "-") {
+      records[i] = dato;
+      break;
+    }
+  }
+}
+
+function nextInstruction() {
+  if (INSZ[0] != "1") {
+    if (instructions[PC] != "-" && PC < instructions.length) {
+      fetch();
+    }
+  } else {
+    alert("Fin de la ejecucion");
+  }
 }
