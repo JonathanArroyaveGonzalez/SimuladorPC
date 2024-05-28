@@ -235,7 +235,7 @@ function executeALU(op1, op2, CODOP) {
   resultValue.textContent = res;
   op1Value.textContent = op1;
   op2Value.textContent = op2;
-  refreshContent();
+  viewContent();
 }
 
 // Funcion para direccionamiento inmediato
@@ -357,11 +357,11 @@ function loadRecords(dato) {
 }
 
 function nextInstruction() {
-  if (INSZ[0] != "1") {
+  
     if (instructions[PC] != "-" && PC < instructions.length) {
       fetch();
     }
-  } else {
+   else {
     alert("Fin de la ejecucion");
   }
 }
