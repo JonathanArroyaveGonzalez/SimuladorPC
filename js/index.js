@@ -66,6 +66,9 @@ const pcValue = document.querySelector(".pc-value");
 const op1Value = document.querySelector(".op1-value");
 const op2Value = document.querySelector(".op2-value");
 const resultValue = document.querySelector(".result-value");
+//Valores de los buses
+const addresBusValue = document.querySelector(".address-bus-value");
+const dataBusValue = document.querySelector(".data-bus-value");
 
 refreshData();
 
@@ -116,9 +119,13 @@ async function fetch() {
   // t2: PC <-- PC + 1
   await changeUCColor();
   await changeControlBusColor();
+  addresBusValue.textContent = MAR;
   await changeAddressBusColor();
+  addresBusValue.textContent = "";
   await changeMemoryColor();
+  dataBusValue.textContent = instructions[MAR];
   await changeDataBusColor();
+  dataBusValue.textContent = "";
   MBR = instructions[MAR];
   mbrValue.textContent = MBR;
   await changeMBRColor();
@@ -252,23 +259,45 @@ async function direct(op1, op2, CODOP) {
   await changeUCColor();
   await changeControlBusColor();
   await changeMARColor();
+  addresBusValue.textContent = op1;
   await changeAddressBusColor();
+  addresBusValue.textContent = "";
   await changeMemoryColor();
+
+  dataBusValue.textContent = data[op1];
   await changeDataBusColor();
+  dataBusValue.textContent = "";
   await changeMBRColor();
   MBR = parseInt(data[op1]);
   mbrValue.textContent = MBR;
   await changeIRColor();
   IR = MBR;
   irValue.textContent = IR;
+  addresBusValue.textContent = op2;
+  await changeAddressBusColor();
+  addresBusValue.textContent = "";
   await changeMemoryColor();
+
+  dataBusValue.textContent = data[op2];
   await changeDataBusColor();
+  dataBusValue.textContent = "";
   MBR = parseInt(data[op2]);
   mbrValue.textContent = MBR;
   await changeMBRColor();
   executeALU(IR, MBR, CODOP);
   await changeALUColor();
   data[dir] = res;
+  mbrValue.textContent = res;
+  await changeMBRColor();
+  await changeUCColor();
+  addresBusValue.textContent = dir;
+  await changeAddressBusColor();
+  addresBusValue.textContent = "";
+  dataBusValue.textContent = res;
+  await changeDataBusColor();
+  dataBusValue.textContent = "";
+  
+  await changeMemoryColor();
   // Muestra el contenido de los arreglos al cargar la página
   refreshData();
   nextInstruction();
@@ -279,9 +308,13 @@ async function indirect(op1, op2, CODOP) {
     await changeUCColor();
     await changeControlBusColor();
     await changeMARColor();
+    addresBusValue.textContent = op1;
     await changeAddressBusColor();
+    addresBusValue.textContent = "";
     await changeMemoryColor();
+    dataBusValue.textContent = data[op1];
     await changeDataBusColor();
+    dataBusValue.textContent = "";
     await changeMBRColor();
     MBR = parseInt(data[op1]);
     mbrValue.textContent = MBR;
@@ -289,8 +322,14 @@ async function indirect(op1, op2, CODOP) {
     IR = MBR;
     op1=IR;
     irValue.textContent = IR;
+    addresBusValue.textContent = op2;
+    await changeAddressBusColor();
+    addresBusValue.textContent = "";
     await changeMemoryColor();
+
+    dataBusValue.textContent = data[op2];
     await changeDataBusColor();
+    dataBusValue.textContent = "";
     MBR = parseInt(data[op2]);
     op2=MBR;
     mbrValue.textContent = MBR;
@@ -299,7 +338,14 @@ async function indirect(op1, op2, CODOP) {
     //Capturando indireccion
     await changeUCColor();
     await changeControlBusColor();
+    addresBusValue.textContent = IR;
+    await changeAddressBusColor();
+    addresBusValue.textContent = "";
+
+    dataBusValue.textContent = data[op1];
     await changeDataBusColor();
+    dataBusValue.textContent = "";
+
     await changeMBRColor();
     MBR = parseInt(data[op1]);
     mbrValue.textContent = MBR;
@@ -307,8 +353,16 @@ async function indirect(op1, op2, CODOP) {
     IR = MBR;
     irValue.textContent = IR;
     await changeControlBusColor();
+
+    addresBusValue.textContent = op2;
+    await changeAddressBusColor();
+    addresBusValue.textContent = "";
+
     await changeMemoryColor();
+
+    dataBusValue.textContent = data[op2];
     await changeDataBusColor();
+    dataBusValue.textContent = "";
     MBR = parseInt(data[op2]);
     mbrValue.textContent = MBR;
     await changeMBRColor();
@@ -316,6 +370,22 @@ async function indirect(op1, op2, CODOP) {
     executeALU(IR, MBR, CODOP);
     await changeALUColor();
     data[dir] = res;
+
+    mbrValue.textContent = res;
+    await changeMBRColor();
+    
+    await changeUCColor();
+
+    addresBusValue.textContent = dir;
+    await changeAddressBusColor();
+    addresBusValue.textContent = "";
+
+    dataBusValue.textContent = res;
+    await changeDataBusColor();
+    dataBusValue.textContent = "";
+
+    await changeMemoryColor();
+    
     // Muestra el contenido de los arreglos al cargar la página
     refreshData();
     nextInstruction();
@@ -358,5 +428,7 @@ function nextInstruction(){
     fetch();
   }
 }
+
+
 
 

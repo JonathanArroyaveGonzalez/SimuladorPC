@@ -100,10 +100,27 @@
     transform: rotate(180deg); /* Gira el texto 180 grados para corregir la orientación */
     white-space: nowrap; /* Evita que el texto se divida en varias líneas */
 }
+.control-bus label, .data-bus label, .address-bus label {
+    writing-mode: vertical-rl; /* Texto vertical de derecha a izquierda */
+    //text-orientation: upright; /* Mantiene la orientación del texto */
+    transform: rotate(180deg); /* Gira el texto 180 grados para corregir la orientación */
+    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+    
+}
 
-.control-bus { background-color: #007bff; } 
-.data-bus { background-color: #28a745; } 
-.address-bus { background-color: #dc3545; }
+.control-bus {
+     background-color: #007bff; 
+} 
+.data-bus { 
+    background-color: #28a745;
+    display: flex;
+    flex-direction: row;   
+} 
+.address-bus {
+     background-color: #dc3545; 
+     display: flex;
+     flex-direction: row;
+}
 
 /* Estilos de la memoria RAM */
 .memory {
