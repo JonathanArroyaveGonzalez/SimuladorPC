@@ -15,7 +15,7 @@
 #processor {
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* 3 columnas */
-    grid-template-rows: repeat(5, auto); /* 5 filas con altura automática */
+    grid-template-rows: repeat(6, auto); /* 5 filas con altura automática */
     gap: 20px;
     padding: 20px;
     text-align: center;
@@ -23,9 +23,14 @@
     justify-items: center; /* Centrar horizontalmente */
 }
 
+.sw{
+    grid-column: 3; /* Abarca las 3 columnas */
+    grid-row: 1;
+    background-color: #FFFF00; 
+}
 
 .uc {
-    grid-column: 1 / span 3; /* Abarca las 3 columnas */
+    grid-column: 1 ; /* Abarca las 3 columnas */
     grid-row: 1;
     background-color: #67eb67; /* Verde claro */
 }
@@ -43,29 +48,30 @@
 }
 
 .mar {
-    grid-column: 2;
+    grid-column: 3;
     grid-row: 3;  
     background-color: #f2f279; /* Amarillo pálido */
 }
 
 .ir {
-    grid-column: 3; 
-    grid-row: 3;   
+    grid-column: 1/ span 3; 
+    grid-row: 4;   
     background-color: #5eb0f2; /* Azul claro */
 }
 .mbr {
     grid-column: 1 / span 3; 
-    grid-row: 4; 
+    grid-row: 5; 
     background-color: #f279b0; /* Rosa */
 }
 .records {
     grid-column: 1 / span 3; /* Abarca las 3 columnas */
-    grid-row: 5;
+    grid-row: 6;
     background-color: #79f2f2; /* Turquesa */
 }
 
+
 /* Estilos para los elementos dentro de los divs (puedes personalizarlos) */
-.uc, .alu, .ir, .mar, .mbr, .pc, .records {
+.uc, .alu, .ir, .mar, .mbr, .pc, .records, .sw {
     border: 1px solid #ccc; 
     padding: 10px;
     font-weight: bold;

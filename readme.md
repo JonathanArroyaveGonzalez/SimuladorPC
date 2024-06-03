@@ -26,3 +26,13 @@
 
 | Tipo dir | Codop | Op 1 | Op 2 | Dir resul |
 
+## Interrupción 
+
+t1: MBR <-- (PC)
+
+t2: MAR <-- Dirección de salvaguardia
+
+    PC  <-- Dirección de rutina
+    
+t3: Memoria <-- (MBR)
+

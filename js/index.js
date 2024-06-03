@@ -1,5 +1,5 @@
 import { viewContent } from './refreshContent.js';
-import {changeUCColor,changePCColor,changeIRColor,changeMBRColor,changeMARColor,changeALUColor,changeRecordColor,changeMemoryColor,changeDataBusColor,changeAddressBusColor,changeControlBusColor} from './colorChange.js';
+import {changeUCColor,changePCColor,changeIRColor,changeMBRColor,changeMARColor,changeALUColor,changeRecordColor,changeMemoryColor,changeDataBusColor,changeAddressBusColor,changeControlBusColor, changeSWColor} from './colorChange.js';
 // Memoria instrucciones
 let instructions = [
   "-",
@@ -40,7 +40,7 @@ let IR = 0; // Registro de instruccion
 let MAR = 0; // Registro de direccion de memoria
 let MBR = 0; // Registro de datos de memoria
 let PC = 0; // Contador de programa
-
+let SW = "00";
 let op1 = 0; // Operando 1
 let op2 = 0; // Operando 2
 
@@ -50,6 +50,7 @@ let res; // Resultado de la operacion
 let CODOP; // Codigo de operacion
 // Referencias al boton de ejecucion
 const btnExecute = document.getElementById("execute");
+const btnInterruption = document.getElementById("interruption");
 
 
 // Obtén referencias a los contenedores de memoria
@@ -66,6 +67,7 @@ const pcValue = document.querySelector(".pc-value");
 const op1Value = document.querySelector(".op1-value");
 const op2Value = document.querySelector(".op2-value");
 const resultValue = document.querySelector(".result-value");
+const swValue = document.querySelector(".sw-value");
 //Valores de los buses
 const addresBusValue = document.querySelector(".address-bus-value");
 const dataBusValue = document.querySelector(".data-bus-value");
@@ -98,17 +100,45 @@ document.getElementById("load").addEventListener("click", () => {
 });
 
 
+// Interrupciónes
+ btnInterruption.addEventListener("click", () => {
+  const operador = document.getElementById('operador').value;
+      const direccion = document.getElementById('direccion').value;
+      const operando1 = document.getElementById('operador1').value;
+      const operando2 = document.getElementById('operador2').value;
+      const direction= document.getElementById('dirResult').value;
 
+      let instruccion = instructions[0];
+      let partes = instruccion.split('|');
+      partes[0] = direccion;
+      partes[1] = operador;
+      partes[2] = operando1;
+      partes[3] = operando2;
+      partes[4] = direction;
+      instructions[13] = partes.join('|');    
+      refreshData();
+      SW = "01";
+      changeSWColor();
+      swValue.textContent = SW;
+});
 
 // Agrega un event listener al botón
 btnExecute.addEventListener("click", () => {
+  if (SW != "01") {
   pcValue.textContent = PC;
   fetch();
+  }else{
+    nextInstruction();
+  }
+
 });
 
 
 // Funcion para el ciclo de captacion
 async function fetch() {
+  swValue.textContent = SW;
+  await changeSWColor();
+  await changeSWColor();
   // t1: MAR <-- PC
   await changeUCColor();
   await changePCColor();
@@ -252,6 +282,7 @@ async function inmediatly(op1, op2, CODOP) {
   console.log("Valores de los registros :", records); 
   refreshData();
   nextInstruction();
+  
 }
 
 // Funcion para direccionamiento directo
@@ -301,6 +332,7 @@ async function direct(op1, op2, CODOP) {
   // Muestra el contenido de los arreglos al cargar la página
   refreshData();
   nextInstruction();
+  
 }
 
 // Funcion para direccionamiento indirecto
@@ -389,6 +421,7 @@ async function indirect(op1, op2, CODOP) {
     // Muestra el contenido de los arreglos al cargar la página
     refreshData();
     nextInstruction();
+     
 }
 
 
@@ -423,10 +456,79 @@ function loadRecords(dato){
   }
 }
 
+async function interruption(){
+  MBR = PC;
+  MAR = 12;
+  PC = 13;
+  instructions[MAR]=MBR;
+
+  await changeUCColor();
+  await changePCColor();
+  mbrValue.textContent = MBR; 
+  await changeUCColor();
+  await changeMBRColor();
+  marValue.textContent = MAR;
+  await changeMARColor();
+  pcValue.textContent = PC;
+  await changePCColor();
+
+  await changeUCColor();
+  await changeControlBusColor();
+  addresBusValue.textContent = MAR;
+  await changeAddressBusColor();
+  addresBusValue.textContent = "";
+  await changeMemoryColor();
+
+  await changeMBRColor();
+
+  dataBusValue.textContent = MBR;
+  await changeDataBusColor();
+  dataBusValue.textContent = "";
+  changeMemoryColor();
+
+  refreshData()
+  SW= "10"
+  swValue.textContent = SW;
+  
+  await fetch();
+
+  SW = "00";
+  swValue.textContent = SW;
+  await changeUCColor();
+  addresBusValue.textContent = 12;
+  await changeAddressBusColor();
+  addresBusValue.textContent = "";
+  await changeMemoryColor();
+
+  dataBusValue.textContent = instructions[12];
+  await changeDataBusColor();
+  dataBusValue.textContent = "";
+  MBR = instructions[12];
+  mbrValue.textContent = MBR;
+  await changeMBRColor();
+  PC = MBR;
+  pcValue.textContent = PC;
+  await changePCColor();
+  refreshData();
+  alert("Interrupción finalizada");
+
+  nextInstruction();
+
+
+}
+
 function nextInstruction(){
-  if (instructions[PC] != "-" && PC < instructions.length) {
+  if (SW == "01") {
+    interruption();
+  }
+  else if (instructions[PC] != "-" && PC < instructions.length) {
+    changeSWColor();
+    swValue.textContent = SW;
     fetch();
   }
+
+  SW = "11";
+  swValue.textContent = SW;
 }
 
 
