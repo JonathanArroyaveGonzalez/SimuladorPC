@@ -1,6 +1,7 @@
 
 // Nuevo color temporal
 const tempColor = "red"; //"lightblue";
+const time = 1000;
 
 // Referencia a los componentes del sistema
 const memorySection = document.querySelector(".memory");
