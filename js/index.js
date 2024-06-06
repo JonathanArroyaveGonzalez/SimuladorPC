@@ -401,7 +401,7 @@ async function indirect(op1, op2, CODOP) {
 
     executeALU(IR, MBR, CODOP);
     await changeALUColor();
-    data[dir] = res;
+    data[dir - 1] = res;
 
     mbrValue.textContent = res;
     await changeMBRColor();
@@ -432,24 +432,13 @@ function refreshData() {
   viewContent(recordsValues, records);
 }
 
-document.getElementById("play").addEventListener("click", playSound);
 
-async function playSound() {
-  let audio = document.getElementById("audio");
-  audio.play(); // Reproducir inmediatamente la primera vez
-
-  for (let i = 1; i < 3; i++) { // Comenzar el bucle desde 1
-      setTimeout(() => {
-          audio.play();
-      }, i * 2000); // Retraso de 2 segundos para las siguientes reproducciones
-  }
-}
 
 
 function loadRecords(dato){
 
   for (let i = 0; i < records.length; i++) {
-    if(dato[i] != "-"){
+    if(records[i] == "-"){
       records[i] = dato;
       break;
     }
@@ -492,6 +481,7 @@ async function interruption(){
   
   await fetch();
 
+
   SW = "00";
   swValue.textContent = SW;
   await changeUCColor();
@@ -510,12 +500,9 @@ async function interruption(){
   pcValue.textContent = PC;
   await changePCColor();
   refreshData();
-  alert("Interrupción finalizada");
-
   nextInstruction();
-
-
 }
+
 
 function nextInstruction(){
   if (SW == "01") {
