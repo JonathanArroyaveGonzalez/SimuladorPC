@@ -365,9 +365,6 @@ async function indirect(op1, op2, CODOP) {
     marValue.textContent = MAR;
     await changeMARColor();
 
-  
-    
-
     await changeControlBusColor();
     addresBusValue.textContent = MAR;
     await changeAddressBusColor();
