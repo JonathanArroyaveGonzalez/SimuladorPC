@@ -1,6 +1,7 @@
 
 // Nuevo color temporal
 const tempColor = "red"; //"lightblue";
+const time = 1000;
 
 // Referencia a los componentes del sistema
 const memorySection = document.querySelector(".memory");
@@ -14,6 +15,7 @@ const record = document.querySelector(".records");
 const ControlBus = document.querySelector(".control-bus");
 const AddressBus = document.querySelector(".address-bus");
 const DataBus = document.querySelector(".data-bus");
+const sw = document.querySelector(".sw");
 
 // Colores originales de los componentes
 const originalColorMemory = getComputedStyle(memorySection).backgroundColor;
@@ -27,6 +29,7 @@ const originalColorControlBus = getComputedStyle(ControlBus).backgroundColor;
 const originalColorAddressBus = getComputedStyle(AddressBus).backgroundColor;
 const originalColorDataBus = getComputedStyle(DataBus).backgroundColor;
 const originalColorALU = getComputedStyle(ALU).backgroundColor;
+const originalSWColor = getComputedStyle(sw).backgroundColor;
 
 // Función para cambiar el color del uc
 export async function changeUCColor() {
@@ -103,4 +106,10 @@ export async function changeUCColor() {
     ControlBus.style.backgroundColor = tempColor;
     await new Promise((resolve) => setTimeout(resolve, 2000)); // Espera 2 segundos
     ControlBus.style.backgroundColor = originalColorControlBus;
+  }
+
+  export async function changeSWColor() {
+    sw.style.backgroundColor = tempColor;
+    await new Promise((resolve) => setTimeout(resolve, 2000)); // Espera 2 segundos
+    sw.style.backgroundColor = originalColorControlBus;
   }

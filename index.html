@@ -12,6 +12,9 @@
             <h2 style="text-align: center;">Procesador</h2>
         <div id="processor">
             <div class="uc">UC</div>
+            <div class="sw">SW
+                <label for="sw" class="sw-value"> </label>
+            </div>
             <div class="alu">ALU
                 <label for="op1" class="op1-value">-</label>
                 <label for="op2" class="op2-value">-</label>
@@ -42,9 +45,11 @@
             </div>
             <div class="data-bus">
                 <h2>BUS DE DATOS</h2>
+                <label for="data-bus-value" class="data-bus-value"></label>
             </div>
             <div class="address-bus">
                 <h2>BUS DE DIRECCIONES</h2>
+                <label for="address-bus-value" class="address-bus-value"></label>
             </div>
         </div>
 
@@ -82,14 +87,9 @@
             <label for="dirResult">Dirección del Resultado</label>
             <input name="dirResult" id="dirResult" type="number">
             <button id="load">Cargar</button>
+            <button id="interruption">Interrupción</button>
             <button id="execute">Ejecutar</button>
         </div>
     </div>
-
-    <audio id="audio" src="http://commondatastorage.googleapis.com/codeskulptor-assets/week7-bounce.m4a" type="audio/mpeg"></audio>
-
-    <button id="play">
-        reproducir
-    </button>
 </body>
 </html>
